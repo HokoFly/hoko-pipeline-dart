@@ -1,92 +1,170 @@
+import 'dart:collection';
+
+import 'package:wtpipeline/src/exception/no_label_found_exception.dart';
 import 'package:wtpipeline/src/labelable.dart';
 import 'package:wtpipeline/src/pipeline_context.dart';
 import 'package:wtpipeline/src/pipeline_invocation_handle.dart';
+import 'package:wtpipeline/src/valve.dart';
 
 class DefaultPipelineContext implements PipelineContext, PipelineInvocationHandle {
-  @override
-  void addCancelable(Cancelable cancelable) {
-    // TODO: implement addCancelable
-  }
+  static const EMPTY_OBJECT = Object();
+  dynamic _outerContext;
+  final Map<Cancelable, Object> _cancelableMap = HashMap(); //todo 多线程？
+  final Map<String, Object> _attributes = HashMap(); //todo 多线程？
+  final List<Valve> _valves;
+  final BasicValve _basicValve;
+  final Map<String, int> _valveIndex;
+  Iterator<Valve> _valveListIterator;
 
-  @override
-  void await() {
-    // TODO: implement await
-  }
+  bool _broken = false;
+  bool _finished = false;
+  bool _canceled = false;
 
-  @override
-  bool awaitTimeout(Duration timeout) {
-    // TODO: implement awaitTimeout
-    throw UnimplementedError();
-  }
+  bool basicValveInvoked = false;
 
-  @override
-  void awaitUninterruptibly() {
-    // TODO: implement awaitUninterruptibly
-  }
-
-  @override
-  void breakPipeline() {
-    // TODO: implement breakPipeline
-  }
-
-  @override
-  void cancel() {
-    // TODO: implement cancel
-  }
-
-  @override
-  Map<String, Object> getAttributeMap() {
-    // TODO: implement getAttributeMap
-    throw UnimplementedError();
-  }
-
-  @override
-  T getOuterContext<T>() {
-    // TODO: implement getOuterContext
-    throw UnimplementedError();
-  }
-
-  @override
-  void gotoLabelAndInvoke(String label) {
-    // TODO: implement gotoLabelAndInvoke
-  }
-
-  @override
-  void invoke() {
-    // TODO: implement invoke
+  DefaultPipelineContext(this._valves, this._basicValve, this._valveIndex) {
+    _valveListIterator = _valves.iterator;
   }
 
   @override
   void invokeNext() {
-    // TODO: implement invokeNext
+    if (_isFinish()) {
+      return;
+    }
+    if (!isBroken() && _valveListIterator.moveNext()) {
+      var valve = _valveListIterator.current;
+      valve.invoke(this);
+    } else {
+      if (basicValveInvoked || _basicValve == null) {
+        _finish(false);
+      } else {
+        _executeBasicValve();
+      }
+    }
+  }
+
+  void _executeBasicValve() {
+    _basicValve.invoke(this);
+    basicValveInvoked = true;
   }
 
   @override
-  bool isBroken() {
-    // TODO: implement isBroken
-    throw UnimplementedError();
-  }
-
-  @override
-  bool isCanceled() {
-    // TODO: implement isCanceled
-    throw UnimplementedError();
-  }
-
-  @override
-  bool isFinish() {
-    // TODO: implement isFinish
-    throw UnimplementedError();
+  void addCancelable(Cancelable cancelable) {
+    _cancelableMap[cancelable] = EMPTY_OBJECT;
   }
 
   @override
   void removeCancelable(Cancelable cancelable) {
-    // TODO: implement removeCancelable
+    _cancelableMap.remove(cancelable);
   }
 
   @override
-  void setOuterContext<T>(T context) {
-    // TODO: implement setOuterContext
+  void await() {
+    if (_finished) {
+      return;
+    }
+    //todo await
   }
+
+  @override
+  bool awaitTimeout(Duration timeout) {
+    return _finished;
+    //todo awaitTimeout
+  }
+
+  @override
+  void awaitUninterruptibly() {
+    if (_finished) {
+      return;
+    }
+    //todo awaitUninterruptibly
+  }
+
+  @override
+  void breakPipeline() {
+    //todo 多线程？
+    _broken = true;
+    invokeNext();
+  }
+
+  @override
+  void cancel() {
+    _finish(true);
+    _cancelableMap.keys.forEach((cancelable) {
+      try {
+        cancelable.cancel();
+      } catch(ignored) {
+
+      }
+    });
+    _cancelableMap.clear();
+  }
+
+  @override
+  Map<String, Object> getAttributeMap() => _attributes;
+
+  @override
+  T getOuterContext<T>() => _outerContext;
+
+  @override
+  void setOuterContext<T>(T context) {
+    _outerContext = context;
+  }
+
+  @override
+  void gotoLabelAndInvoke(String label) {
+    var idx = _valveIndex[label];
+    if (idx == null) {
+      throw NoLabelFoundException("Can't find this label $label");
+    }
+    if (idx > _valves.length) {
+      throw NoLabelFoundException("Label $label is out of range $idx");
+    }
+    _valveListIterator = _valves.iterator;
+    for (var i = 0; i < idx; i++) {
+      _valveListIterator.moveNext();
+    }
+    invokeNext();
+  }
+
+  @override
+  void invoke() {
+    invokeNext();
+  }
+
+
+  @override
+  bool isBroken() {
+    //todo 多线程？
+    return _broken;
+  }
+
+  @override
+  bool isCanceled() {
+    //todo 多线程？
+    return _canceled;
+  }
+
+  @override
+  bool isFinish() {
+    //todo 多线程？
+    return !_broken && !_canceled && _finished;
+  }
+
+
+  bool _isFinish() {
+    //todo 多线程？
+    return _finished;
+  }
+
+  void _finish(bool cancel) {
+    if (cancel) {
+      _canceled = true;
+    }
+    _finished = true;
+    //todo 多线程?
+    //todo 锁住await,发signal
+  }
+
 
 }
