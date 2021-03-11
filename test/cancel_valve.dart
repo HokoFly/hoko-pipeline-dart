@@ -5,8 +5,9 @@ class CancelValve implements Valve {
   @override
   void invoke(PipelineContext pipelineContext) {
     print("CancelValve");
-    //todo 延时2s调用
-    pipelineContext.invokeNext();
+    Future.delayed(Duration(seconds: 2), () => {
+      pipelineContext.invokeNext()
+    });
   }
 
   @override

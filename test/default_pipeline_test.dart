@@ -8,7 +8,7 @@ import 'print1_valve.dart';
 import 'print2_valve.dart';
 import 'retry_valve.dart';
 
-void main(List<String> args) {
+void main() {
   DefaultPipelineTest().testNewInvocation();
 }
 

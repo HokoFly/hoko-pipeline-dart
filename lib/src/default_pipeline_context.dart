@@ -9,8 +9,8 @@ import 'package:wtpipeline/src/valve.dart';
 class DefaultPipelineContext implements PipelineContext, PipelineInvocationHandle {
   static const EMPTY_OBJECT = Object();
   dynamic _outerContext;
-  final Map<Cancelable, Object> _cancelableMap = HashMap(); //todo 多线程？
-  final Map<String, Object> _attributes = HashMap(); //todo 多线程？
+  final Map<Cancelable, Object> _cancelableMap = HashMap();
+  final Map<String, Object> _attributes = HashMap();
   final List<Valve> _valves;
   final BasicValve _basicValve;
   final Map<String, int> _valveIndex;
@@ -82,7 +82,6 @@ class DefaultPipelineContext implements PipelineContext, PipelineInvocationHandl
 
   @override
   void breakPipeline() {
-    //todo 多线程？
     _broken = true;
     invokeNext();
   }
@@ -135,25 +134,21 @@ class DefaultPipelineContext implements PipelineContext, PipelineInvocationHandl
 
   @override
   bool isBroken() {
-    //todo 多线程？
     return _broken;
   }
 
   @override
   bool isCanceled() {
-    //todo 多线程？
     return _canceled;
   }
 
   @override
   bool isFinish() {
-    //todo 多线程？
     return !_broken && !_canceled && _finished;
   }
 
 
   bool _isFinish() {
-    //todo 多线程？
     return _finished;
   }
 
@@ -162,7 +157,6 @@ class DefaultPipelineContext implements PipelineContext, PipelineInvocationHandl
       _canceled = true;
     }
     _finished = true;
-    //todo 多线程?
     //todo 锁住await,发signal
   }
 
