@@ -44,8 +44,8 @@ class DefaultPipelineContext implements PipelineContext, PipelineInvocationHandl
   }
 
   void _executeBasicValve() {
-    _basicValve.invoke(this);
     basicValveInvoked = true;
+    _basicValve.invoke(this);
   }
 
   @override
