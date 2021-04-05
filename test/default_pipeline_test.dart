@@ -65,7 +65,9 @@ void testNewInvocation() {
   pipelineContext.setOuterContext(mockContext);
   pipelineContext.invoke();
 
-  pipelineContext.await();
+  // return Future.delayed(Duration(seconds: 5), () {
+  //   print("Done");
+  // });
   print("Done");
   expect(pipelineContext.isFinish(), equals(true));
   expect(mockContext.isLimitedRetryTime(), equals(true));
@@ -79,7 +81,6 @@ void testNewInvocationForEmptyValue() {
   pipelineContext.setOuterContext(mockContext);
   pipelineContext.invoke();
 
-  pipelineContext.await();
   print("Done");
   expect(pipelineContext.isFinish(), equals(true));
   expect(mockContext.isLimitedRetryTime(), equals(false));
@@ -120,7 +121,6 @@ void testNewInvocationForBreak() {
   pipelineContext.setOuterContext(mockContext);
   pipelineContext.invoke();
 
-  pipelineContext.await();
   print("Done");
   expect(pipelineContext.isFinish(), equals(false));
   expect(pipelineContext.isBroken(), equals(true));
@@ -145,7 +145,6 @@ void testNewInvocationForBasic() {
   pipelineContext.setOuterContext(mockContext);
   pipelineContext.invoke();
 
-  pipelineContext.await();
   print("Done");
   expect(pipelineContext.isFinish(), equals(true));
   expect(mockContext.isLimitedRetryTime(), equals(true));
@@ -171,7 +170,6 @@ void testNewInvocationForGotoNoLabel() {
   pipelineContext.setOuterContext(mockContext);
   pipelineContext.invoke();
 
-  pipelineContext.await();
   print("Done");
   expect(pipelineContext.isFinish(), equals(true));
   expect(pipelineContext.isBroken(), equals(false));
@@ -204,7 +202,6 @@ void testNewInvocationForCancel() {
     pipelineContext.cancel()
   });
 
-  pipelineContext.await();
   f.then((value) {
     print("Done");
     expect(pipelineContext.isCanceled(), equals(true));

@@ -16,19 +16,4 @@ abstract class PipelineInvocationHandle implements PipelineStates, Cancelable {
    * 取消这次执行
    */
   void cancel();
-
-  /**
-   * 等待pipeline执行完成，异步支持
-   */
-  void await();
-
-  /**
-   * 等待pipeline执行完成，不被打断
-   */
-  void awaitUninterruptibly();
-
-  /**
-   * 在设置超时时间内，等待pipeline执行完成
-   */
-  bool awaitTimeout(Duration timeout);
 }

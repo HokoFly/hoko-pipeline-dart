@@ -59,28 +59,6 @@ class DefaultPipelineContext implements PipelineContext, PipelineInvocationHandl
   }
 
   @override
-  void await() {
-    if (_finished) {
-      return;
-    }
-    //todo await
-  }
-
-  @override
-  bool awaitTimeout(Duration timeout) {
-    return _finished;
-    //todo awaitTimeout
-  }
-
-  @override
-  void awaitUninterruptibly() {
-    if (_finished) {
-      return;
-    }
-    //todo awaitUninterruptibly
-  }
-
-  @override
   void breakPipeline() {
     _broken = true;
     invokeNext();
@@ -157,7 +135,6 @@ class DefaultPipelineContext implements PipelineContext, PipelineInvocationHandl
       _canceled = true;
     }
     _finished = true;
-    //todo 锁住await,发signal
   }
 
 
