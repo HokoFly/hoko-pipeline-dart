@@ -1,11 +1,7 @@
 import 'dart:async';
 
 import 'package:test/test.dart';
-import 'package:wtpipeline/src/default_pipeline.dart';
-import 'package:wtpipeline/src/exception/duplicate_label_exception.dart';
-import 'package:wtpipeline/src/pipeline.dart';
-import 'package:wtpipeline/src/pipeline_invocation_handle.dart';
-import 'package:wtpipeline/src/valve.dart';
+import 'package:wtpipeline/wtpipeline.dart';
 
 import 'basic_base_valve.dart';
 import 'break_valve.dart';

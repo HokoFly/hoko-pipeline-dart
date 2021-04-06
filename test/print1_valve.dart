@@ -1,5 +1,4 @@
-import 'package:wtpipeline/src/pipeline_context.dart';
-import 'package:wtpipeline/src/valve.dart';
+import 'package:wtpipeline/wtpipeline.dart';
 
 class Print1Valve implements Valve {
   String _label;

@@ -1,4 +1,4 @@
-import 'package:wtpipeline/src/cancelable.dart';
+import 'package:wtpipeline/src/labelable.dart';
 import 'package:wtpipeline/src/pipeline_context.dart';
 
 /**

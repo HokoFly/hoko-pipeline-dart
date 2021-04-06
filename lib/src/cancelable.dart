@@ -1,11 +1,11 @@
 /**
- * 可打上标签的抽象
+ * 可取消的抽象
  *
  * Created by yuxiaofei on 2021/2/8
  */
-abstract class Labelable {
+abstract class Cancelable {
   /**
-   * 返回标签
+   * 取消操作
    */
-  String label();
+  void cancel();
 }

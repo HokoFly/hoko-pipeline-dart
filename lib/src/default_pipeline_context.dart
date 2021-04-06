@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:wtpipeline/src/exception/no_label_found_exception.dart';
-import 'package:wtpipeline/src/labelable.dart';
+import 'package:wtpipeline/src/cancelable.dart';
 import 'package:wtpipeline/src/pipeline_context.dart';
 import 'package:wtpipeline/src/pipeline_invocation_handle.dart';
 import 'package:wtpipeline/src/valve.dart';

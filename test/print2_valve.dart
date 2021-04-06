@@ -1,7 +1,6 @@
 import 'dart:isolate';
 
-import 'package:wtpipeline/src/pipeline_context.dart';
-import 'package:wtpipeline/src/valve.dart';
+import 'package:wtpipeline/wtpipeline.dart';
 
 class Print2Valve implements Valve {
   @override
