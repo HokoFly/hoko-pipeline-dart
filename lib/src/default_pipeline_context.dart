@@ -9,7 +9,7 @@ import 'package:wtpipeline/src/valve.dart';
 
 class DefaultPipelineContext implements PipelineContext, PipelineInvocationHandle {
   static const EMPTY_OBJECT = Object();
-  dynamic _outerContext;
+  Object _outerContext;
   final Map<Cancelable, Object> _cancelableMap = HashMap();
   final Map<String, Object> _attributes = HashMap();
   final List<Valve> _valves;
@@ -30,7 +30,7 @@ class DefaultPipelineContext implements PipelineContext, PipelineInvocationHandl
 
   @override
   void invokeNext() {
-    if (_isFinish()) {
+    if (_finished) {
       return;
     }
     if (!isBroken() && _valveListIterator.moveNext()) {
@@ -127,11 +127,6 @@ class DefaultPipelineContext implements PipelineContext, PipelineInvocationHandl
   @override
   bool isFinish() {
     return !_broken && !_canceled && _finished;
-  }
-
-
-  bool _isFinish() {
-    return _finished;
   }
 
   void _finish(bool cancel) {
