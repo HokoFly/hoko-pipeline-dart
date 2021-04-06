@@ -6,8 +6,11 @@ class Print1Valve implements Valve {
 
   @override
   void invoke(PipelineContext pipelineContext) {
-    print("Print1 Valve");
-    //todo 多线程调用
+    _asyncInvoke(pipelineContext);
+  }
+
+  void _asyncInvoke(PipelineContext pipelineContext) async {
+    await print("Print1 Valve");
     pipelineContext.invokeNext();
   }
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:wtpipeline/src/exception/no_label_found_exception.dart';
@@ -15,6 +16,7 @@ class DefaultPipelineContext implements PipelineContext, PipelineInvocationHandl
   final BasicValve _basicValve;
   final Map<String, int> _valveIndex;
   Iterator<Valve> _valveListIterator;
+  Completer _completer;
 
   bool _broken = false;
   bool _finished = false;
@@ -105,8 +107,10 @@ class DefaultPipelineContext implements PipelineContext, PipelineInvocationHandl
   }
 
   @override
-  void invoke() {
+  Future invoke() {
+    _completer = Completer();
     invokeNext();
+    return _completer.future;
   }
 
 
@@ -135,6 +139,7 @@ class DefaultPipelineContext implements PipelineContext, PipelineInvocationHandl
       _canceled = true;
     }
     _finished = true;
+    _completer.complete();
   }
 
 

@@ -10,6 +10,7 @@ import 'package:wtpipeline/src/valve.dart';
 import 'basic_base_valve.dart';
 import 'break_valve.dart';
 import 'cancel_valve.dart';
+import 'goto_basic_valve.dart';
 import 'goto_no_label_valve.dart';
 import 'mock_context.dart';
 import 'print1_valve.dart';
@@ -37,6 +38,13 @@ void main() {
     testNewInvocationForBasic();
   });
 
+  test("testNewInvocationForBasicHaveBreak", () {
+    testNewInvocationForBasicHaveBreak();
+  });
+  test("testNewInvocationForGotoBasic", () {
+    testNewInvocationForGotoBasic();
+  });
+
   test("testNewInvocationForGotoNoLabel", () {
     testNewInvocationForGotoNoLabel();
   });
@@ -47,7 +55,7 @@ void main() {
 
 }
 
-void testNewInvocation() {
+void testNewInvocation() async {
   var valves = <Valve>[];
   var print1Valve = Print1Valve();
   String retryStartLabel = "print1";
@@ -63,11 +71,8 @@ void testNewInvocation() {
   PipelineInvocationHandle pipelineContext = pipeline.newInvocation();
   MockContext mockContext = MockContext();
   pipelineContext.setOuterContext(mockContext);
-  pipelineContext.invoke();
 
-  // return Future.delayed(Duration(seconds: 5), () {
-  //   print("Done");
-  // });
+  await pipelineContext.invoke();
   print("Done");
   expect(pipelineContext.isFinish(), equals(true));
   expect(mockContext.isLimitedRetryTime(), equals(true));
@@ -101,7 +106,7 @@ void testNewInvocationWhenDoubleLabel() {
 }
 
 
-void testNewInvocationForBreak() {
+void testNewInvocationForBreak() async {
   var valves = <Valve>[];
   var print1Valve = Print1Valve();
   String retryStartLabel = "print1";
@@ -119,7 +124,7 @@ void testNewInvocationForBreak() {
   PipelineInvocationHandle pipelineContext = pipeline.newInvocation();
   MockContext mockContext = MockContext();
   pipelineContext.setOuterContext(mockContext);
-  pipelineContext.invoke();
+  await pipelineContext.invoke();
 
   print("Done");
   expect(pipelineContext.isFinish(), equals(false));
@@ -127,7 +132,7 @@ void testNewInvocationForBreak() {
   expect(mockContext.isLimitedRetryTime(), equals(true));
 }
 
-void testNewInvocationForBasic() {
+void testNewInvocationForBasic() async {
   var valves = <Valve>[];
   var print1Valve = Print1Valve();
   String retryStartLabel = "print1";
@@ -143,14 +148,67 @@ void testNewInvocationForBasic() {
   PipelineInvocationHandle pipelineContext = pipeline.newInvocation();
   MockContext mockContext = MockContext();
   pipelineContext.setOuterContext(mockContext);
-  pipelineContext.invoke();
+  await pipelineContext.invoke();
 
   print("Done");
   expect(pipelineContext.isFinish(), equals(true));
   expect(mockContext.isLimitedRetryTime(), equals(true));
 }
 
-void testNewInvocationForGotoNoLabel() {
+void testNewInvocationForBasicHaveBreak() async {
+  var valves = <Valve>[];
+  var print1Valve = Print1Valve();
+  String retryStartLabel = "print1";
+  print1Valve.setLabel(retryStartLabel);
+  var print2Valve = Print2Valve();
+  var breakValve = BreakValve();
+  var retryValve = RetryValve();
+  retryValve.setRetryStartLabel(retryStartLabel);
+  valves.add(print1Valve);
+  valves.add(print2Valve);
+  valves.add(breakValve);
+  valves.add(retryValve);
+
+  Pipeline pipeline = DefaultPipeline(valves, BasicBaseValve());
+  PipelineInvocationHandle pipelineContext = pipeline.newInvocation();
+  MockContext mockContext = MockContext();
+  pipelineContext.setOuterContext(mockContext);
+  await pipelineContext.invoke();
+
+  print("Done");
+  expect(pipelineContext.isFinish(), equals(false));
+  expect(pipelineContext.isBroken(), equals(true));
+  expect(mockContext.isLimitedRetryTime(), equals(false));
+}
+
+void testNewInvocationForGotoBasic() async {
+  var valves = <Valve>[];
+  var print1Valve = Print1Valve();
+  String retryStartLabel = "print1";
+  print1Valve.setLabel(retryStartLabel);
+  var print2Valve = Print2Valve();
+  var gotoBasicValve = GotoBasicValve();
+  var retryValve = RetryValve();
+  retryValve.setRetryStartLabel(retryStartLabel);
+  valves.add(print1Valve);
+  valves.add(print2Valve);
+  valves.add(gotoBasicValve);
+  valves.add(retryValve);
+
+  Pipeline pipeline = DefaultPipeline(valves, BasicBaseValve());
+  PipelineInvocationHandle pipelineContext = pipeline.newInvocation();
+  MockContext mockContext = MockContext();
+  pipelineContext.setOuterContext(mockContext);
+  await pipelineContext.invoke();
+
+  print("Done");
+  expect(pipelineContext.isFinish(), equals(true));
+  expect(pipelineContext.isBroken(), equals(false));
+  expect(mockContext.isLimitedRetryTime(), equals(false));
+}
+
+
+void testNewInvocationForGotoNoLabel() async {
   var valves = <Valve>[];
   var print1Valve = Print1Valve();
   String retryStartLabel = "print1";
@@ -168,7 +226,7 @@ void testNewInvocationForGotoNoLabel() {
   PipelineInvocationHandle pipelineContext = pipeline.newInvocation();
   MockContext mockContext = MockContext();
   pipelineContext.setOuterContext(mockContext);
-  pipelineContext.invoke();
+  await pipelineContext.invoke();
 
   print("Done");
   expect(pipelineContext.isFinish(), equals(true));
@@ -176,7 +234,7 @@ void testNewInvocationForGotoNoLabel() {
   expect(mockContext.isLimitedRetryTime(), equals(true));
 }
 
-void testNewInvocationForCancel() {
+void testNewInvocationForCancel() async {
   var valves = <Valve>[];
   var print1Valve = Print1Valve();
   String retryStartLabel = "print1";
@@ -196,17 +254,13 @@ void testNewInvocationForCancel() {
   PipelineInvocationHandle pipelineContext = pipeline.newInvocation();
   MockContext mockContext = MockContext();
   pipelineContext.setOuterContext(mockContext);
-  pipelineContext.invoke();
-
-  var f = Future.delayed(Duration(seconds: 1), () => {
+  Future.delayed(Duration(seconds: 1), () => {
     pipelineContext.cancel()
   });
-
-  f.then((value) {
-    print("Done");
-    expect(pipelineContext.isCanceled(), equals(true));
-    expect(pipelineContext.isFinish(), equals(false));
-    expect(pipelineContext.isBroken(), equals(false));
-    expect(mockContext.isLimitedRetryTime(), equals(false));
-  });
+  await pipelineContext.invoke();;
+  print("Done");
+  expect(pipelineContext.isCanceled(), equals(true));
+  expect(pipelineContext.isFinish(), equals(false));
+  expect(pipelineContext.isBroken(), equals(false));
+  expect(mockContext.isLimitedRetryTime(), equals(false));
 }

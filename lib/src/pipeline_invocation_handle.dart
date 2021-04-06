@@ -10,7 +10,7 @@ abstract class PipelineInvocationHandle implements PipelineStates, Cancelable {
   /**
    * 执行pipeline
    */
-  void invoke();
+  Future invoke();
 
   /**
    * 取消这次执行
