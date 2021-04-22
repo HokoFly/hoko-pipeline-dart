@@ -1,6 +1,6 @@
 import 'dart:isolate';
 
-import 'package:wtpipeline/wtpipeline.dart';
+import 'package:hoko_pipeline/hoko_pipeline.dart';
 
 class Print2Valve implements Valve {
   @override

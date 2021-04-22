@@ -1,5 +1,5 @@
-import 'package:wtpipeline/src/cancelable.dart';
-import 'package:wtpipeline/src/pipeline_states.dart';
+import 'package:hoko_pipeline/src/cancelable.dart';
+import 'package:hoko_pipeline/src/pipeline_states.dart';
 
 /**
  * 基础功能的Pipeline上下文

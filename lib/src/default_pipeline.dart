@@ -1,10 +1,10 @@
 import 'dart:collection';
 
-import 'package:wtpipeline/src/default_pipeline_context.dart';
-import 'package:wtpipeline/src/exception/duplicate_label_exception.dart';
-import 'package:wtpipeline/src/pipeline.dart';
-import 'package:wtpipeline/src/pipeline_invocation_handle.dart';
-import 'package:wtpipeline/src/valve.dart';
+import 'package:hoko_pipeline/src/default_pipeline_context.dart';
+import 'package:hoko_pipeline/src/exception/duplicate_label_exception.dart';
+import 'package:hoko_pipeline/src/pipeline.dart';
+import 'package:hoko_pipeline/src/pipeline_invocation_handle.dart';
+import 'package:hoko_pipeline/src/valve.dart';
 
 class DefaultPipeline implements Pipeline {
 

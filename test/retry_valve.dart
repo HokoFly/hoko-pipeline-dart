@@ -1,4 +1,4 @@
-import 'package:wtpipeline/wtpipeline.dart';
+import 'package:hoko_pipeline/hoko_pipeline.dart';
 
 class RetryValve implements Valve {
   String _retryStartLabel;

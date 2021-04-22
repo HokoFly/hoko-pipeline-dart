@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:wtpipeline/src/exception/no_label_found_exception.dart';
-import 'package:wtpipeline/src/cancelable.dart';
-import 'package:wtpipeline/src/pipeline_context.dart';
-import 'package:wtpipeline/src/pipeline_invocation_handle.dart';
-import 'package:wtpipeline/src/valve.dart';
+import 'package:hoko_pipeline/src/exception/no_label_found_exception.dart';
+import 'package:hoko_pipeline/src/cancelable.dart';
+import 'package:hoko_pipeline/src/pipeline_context.dart';
+import 'package:hoko_pipeline/src/pipeline_invocation_handle.dart';
+import 'package:hoko_pipeline/src/valve.dart';
 
 class DefaultPipelineContext implements PipelineContext, PipelineInvocationHandle {
   static const EMPTY_OBJECT = Object();

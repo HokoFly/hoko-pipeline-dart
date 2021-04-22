@@ -1,4 +1,4 @@
-import 'package:wtpipeline/src/pipeline_invocation_handle.dart';
+import 'package:hoko_pipeline/src/pipeline_invocation_handle.dart';
 
 /**
  * Pipeline的抽象接口

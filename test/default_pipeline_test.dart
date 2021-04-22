@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:test/test.dart';
-import 'package:wtpipeline/wtpipeline.dart';
+import 'package:hoko_pipeline/hoko_pipeline.dart';
 
 import 'basic_base_valve.dart';
 import 'break_valve.dart';
